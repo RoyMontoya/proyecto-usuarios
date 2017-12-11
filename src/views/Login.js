@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import '../styles/Login.css'
+import '../styles/Login.css';
+import {Redirect } from 'react-router-dom';
 
 class Login extends Component {
   constructor() {
@@ -7,7 +8,8 @@ class Login extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      isLogged: false
     }
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -15,29 +17,35 @@ class Login extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (this.state.username == "admin" && this.state.password == "admin123") {
-      alert("Bienvenido");
+      this.setState({username: '', password: '', isLogged: true});
     } else {
-      alert("Data incorrecta");
+      this.setState({username: '', password: '', isLogged: false});
+      alert("Credenciales Invalidas");
     }
+
   }
 
   render() {
     return (<div className="Login">
-      <div className="Login-box">
-        <form onSubmit={this.onSubmit}>
-          <div className="Login-form-box">
-            <label className="Login-username">UserName</label>
-            <input type="text" value={this.state.username} onChange="onChange" ={(e) => {this.setState({username: e.target.value})}}/>
-          </div>
-          <div className="Login-form-box">
-            <label className="Login-password">Password</label>
-            <input type="password" value={this.state.password} onChange={(e) => {
-                this.setState({password: e.target.value})
-              }}/>
-          </div>
-          <button type="submit" className="Login-submit">Iniciar sesion</button>
-        </form>
-      </div>
+      {
+        this.state.isLogged
+          ? <Redirect to="/home"/>
+          : <div className="Login-box">
+              <form onSubmit={this.onSubmit}>
+                <div className="Login-form-box">
+                  <label className="Login-username">UserName</label>
+                  <input type="text" value={this.state.username} onChange={(e) => {this.setState({username: e.target.value})}}/>
+                </div>
+                <div className="Login-form-box">
+                  <label className="Login-password">Password</label>
+                  <input type="password" value={this.state.password} onChange={(e) => {
+                      this.setState({password: e.target.value})
+                    }}/>
+                </div>
+                <button type="submit" className="Login-submit">Iniciar sesion</button>
+              </form>
+            </div>
+      }
     </div>);
   }
 }
